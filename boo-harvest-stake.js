@@ -1,6 +1,5 @@
 const { ethers } = require('ethers');
 
-
 // rpc = "https://rpcapi.fantom.network/";
 // rpc = 'https://rpc2.fantom.network';
 rpc = 'https://rpc.ftm.tools/ ';
@@ -27,7 +26,7 @@ const TokenAbi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructo
 const TokenContract = new ethers.Contract(TokenAddress, TokenAbi, provider);
 
 
-var options = { gasPrice: 1500000000, gasLimit: 500000};		// gwei
+var options = { gasPrice: 50000000000, gasLimit: 500000};		// gwei
 
 // const repeat = 3600;		// auto-reinvest loop time, msec 
 const repeat = 3600000;		// auto-reinvest loop time, msec 
@@ -66,10 +65,11 @@ function claimLpReward(_pid=NaN, _amount=0) {
 	return;
 }
 
-function depositSingle(_pid=NaN, _amount=0) {
-	if (_pid != NaN & _amount != NaN) {
-		SingleContract.deposit(_pid, _amount, options);
-	}
+async function depositSingle(contract=SingleContract, token='BOO', _amount=0) {
+	const harvestBal = await pendingBal(LpContract, 0, myWallet, TokenName);
+	const subTotal = await harvestBal + _amount;
+	await contract.deposit(0, subTotal, options);
+	await SingleContract.deposit(_pid, _amount, options);
 	return;
 }
 
