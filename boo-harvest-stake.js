@@ -65,11 +65,10 @@ function claimLpReward(_pid=NaN, _amount=0) {
 	return;
 }
 
-async function depositSingle(contract=SingleContract, token='BOO', _amount=0) {
-	const harvestBal = await pendingBal(LpContract, 0, myWallet, TokenName);
+async function depositSingle(_amount=0) {
+	const harvestBal = await pendingBal(0, myWallet);
 	const subTotal = await harvestBal + _amount;
-	await contract.deposit(0, subTotal, options);
-	await SingleContract.deposit(_pid, _amount, options);
+	await SingleContract.deposit(0, subTotal, options);
 	return;
 }
 
@@ -94,7 +93,7 @@ async function main() {
 
 		await sleep(2000);
 
-		await depositSingle(0, tokenBal);
+		await depositSingle(tokenBal);
 		const tokenDeposit = await ethers.utils.formatUnits(tokenBal,18);
 		console.log(">> deposited " + tokenDeposit +" "+tokenName+" \n");
 
